@@ -1,4 +1,11 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  AfterViewInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,23 +15,25 @@ import { CommonModule } from '@angular/common';
   templateUrl: './video-stream.html',
   styleUrl: './video-stream.scss',
 })
-export class VideoStream {
+export class VideoStream implements AfterViewInit, OnDestroy {
+  @ViewChild('player', { static: true }) player!: ElementRef<HTMLDivElement>;
   isFullscreen = signal(false);
   isMuted = signal(false);
   showMiniPlayer = signal(false);
   quality = signal('720p');
   qualities = ['480p', '720p', '1080p'];
+  private observer?: IntersectionObserver;
 
-  constructor() {
-    // Efecto que escucha scroll para mini-player
-    effect(() => {
-      const handler = () => {
-        const scrolled = window.scrollY > 400;
-        this.showMiniPlayer.set(scrolled);
-      };
-      window.addEventListener('scroll', handler);
-      return () => window.removeEventListener('scroll', handler);
+  ngAfterViewInit() {
+    this.observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      this.showMiniPlayer.set(!entry.isIntersecting);
     });
+    this.observer.observe(this.player.nativeElement);
+  }
+
+  ngOnDestroy() {
+    this.observer?.disconnect();
   }
 
   toggleFullscreen() {
