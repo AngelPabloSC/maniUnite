@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-bingo-cards',
@@ -9,6 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './bingo-cards.scss',
 })
 export class BingoCards {
+  auth = inject(AuthService);
   // Simula una tabla de bingo (5x5)
   bingoGrid = signal<(number | 'FREE')[][]>([
     [5, 21, 36, 57, 65],
@@ -62,5 +64,9 @@ export class BingoCards {
 
   getRemaining() {
     return 25 - this.totalMarked;
+  }
+
+  login() {
+    this.auth.login();
   }
 }

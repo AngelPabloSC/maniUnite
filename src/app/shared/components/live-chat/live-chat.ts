@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 interface Message {
   user: string;
@@ -15,6 +16,8 @@ interface Message {
   styleUrl: './live-chat.scss',
 })
 export class LiveChat {
+  auth = inject(AuthService);
+
   messages = signal<Message[]>([
     {
       user: 'Moderador',
@@ -33,10 +36,8 @@ export class LiveChat {
     },
   ]);
 
-  isLoggedIn = signal(false);
-
   login() {
-    this.isLoggedIn.set(true);
+    this.auth.login();
   }
 
   sendMessage(event: Event) {

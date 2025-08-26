@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -15,10 +16,12 @@ export class LoginPage {
   password = '';
   remember = false;
   showPassword = false;
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
   login() {
-    console.log('Iniciar sesión con:', this.email, this.password);
-    
+    this.auth.login();
+    this.router.navigate(['/bingo']);
   }
 
   togglePasswordVisibility(): void {

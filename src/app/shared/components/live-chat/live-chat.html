@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <ng-container *ngIf="isLoggedIn(); else loginPrompt">
+  <ng-container *ngIf="auth.isLoggedIn(); else loginPrompt">
     <form (submit)="sendMessage($event)" class="flex gap-2">
       <input
         name="message"
